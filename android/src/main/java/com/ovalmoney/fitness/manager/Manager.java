@@ -451,6 +451,8 @@ public class Manager implements ActivityEventListener {
                 stepMap.putString("startDate", dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
                 stepMap.putString("endDate", dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
                 stepMap.putDouble("quantity", dp.getValue(field).asInt());
+                stepMap.putString("originDataSourceId", dp.getOriginalDataSource().getStreamIdentifier());
+                stepMap.putString("dataSourceId", dp.getDataSource().getStreamIdentifier());
                 map.pushMap(stepMap);
             }
         }
