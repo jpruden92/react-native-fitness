@@ -8,10 +8,12 @@ import {
 
 const pkg = require("@ovalmoney/react-native-fitness/package.json");
 
-const HEALTH_USAGE_DESCRIPTION = "Allow $(PRODUCT_NAME) acess your health data";
+const HEALTH_USAGE_DESCRIPTION = "Allow $(PRODUCT_NAME) access your health data";
+const HEALTH_UPDATE_DESCRIPTION = "Allow $(PRODUCT_NAME) update your health data";
 
 type IOSPermissionProps = {
   healthShareUsageDescription?: string;
+  healthUpdateUsageDescription?: string;
 };
 
 const withFitnessApi: ConfigPlugin<IOSPermissionProps | void> = (
@@ -19,12 +21,17 @@ const withFitnessApi: ConfigPlugin<IOSPermissionProps | void> = (
   props
 ) => {
   const iosConfig = withInfoPlist(initialConfig, (config) => {
-    const { healthShareUsageDescription } = props || {};
+    const { healthShareUsageDescription, healthUpdateUsageDescription } = props || {};
 
     config.modResults.NSHealthShareUsageDescription =
       healthShareUsageDescription ||
       config.modResults.NSHealthShareUsageDescription ||
       HEALTH_USAGE_DESCRIPTION;
+
+    config.modResults.NSHealthUpdateUsageDescription =
+      healthUpdateUsageDescription ||
+      config.modResults.NSHealthUpdateUsageDescription ||
+      HEALTH_UPDATE_DESCRIPTION;
 
     return config;
   });
