@@ -4,6 +4,7 @@ import {
   withInfoPlist,
   withSettingsGradle,
   withAppBuildGradle,
+  withEntitlementsPlist,
 } from "@expo/config-plugins";
 
 const pkg = require("@ovalmoney/react-native-fitness/package.json");
@@ -36,7 +37,19 @@ const withFitnessApi: ConfigPlugin<IOSPermissionProps | void> = (
     return config;
   });
 
-  const configWithGradleSettings = withSettingsGradle(iosConfig, (config) => {
+  // Add entitlements. These are automatically synced when using EAS build for production apps.
+  const iosConfig2 = withEntitlementsPlist(iosConfig, (config) => {
+    config.modResults['com.apple.developer.healthkit'] = true
+    if (
+      !Array.isArray(config.modResults['com.apple.developer.healthkit.access'])
+    ) {
+      config.modResults['com.apple.developer.healthkit.access'] = []
+    }
+
+    return config;
+  })
+
+  const configWithGradleSettings = withSettingsGradle(iosConfig2, (config) => {
     config.modResults.contents =
       config.modResults.contents +
       "\ninclude ':@ovalmoney_react-native-fitness' \nproject(':@ovalmoney_react-native-fitness').projectDir = new File(rootProject.projectDir, 	'../node_modules/@ovalmoney/react-native-fitness/android')\n";
